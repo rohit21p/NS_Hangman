@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Static Template</title>
+    <style>
+      .letter {
+        width: 100px;
+        height: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="game"></div>
+    <p id="attempts"></div>
+    <script>
+      let words = [
+        "Problems",
+        "Algorithms",
+        "Problems",
+        "Algorithms",
+        "Problems",
+        "Algorithms",
+        "Problems",
+        "Algorithms",
+        "Problems",
+        "Algorithms"
+      ];
+      let index = Math.floor(Math.random() * (words.length - 1));
+      let word = words[index];
+      let attempts = word.length/2;
+      document.getElementById("attempts").innerText = `${attempts} Attempts Remaining`;
+      let game = document.getElementById("game");
+      let show = true;
+      word
+        .toUpperCase()
+        .split("")
+        .forEach((c) => {
+          let input = document.createElement("input");
+          input.setAttribute("type", "text");
+          input.setAttribute("class", "letter");
+          input.addEventListener("input", function (e) {
+            e.target.value =
+              ("value", e.target.value.charAt(e.target.value.length - 1));
+              document.getElementById("attempts").innerText = `${--attempts} Attempts Remaining`;
+          });
+          if (show) {
+            input.setAttribute("value", c);
+            input.setAttribute("disabled", true);
+          }
+          show = !show;
+          game.appendChild(input);
+        });
+    </script>
+  </body>
+</html>

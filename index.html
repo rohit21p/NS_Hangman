@@ -10,49 +10,135 @@
         width: 100px;
         height: 100px;
       }
+      body {
+        background-image: radial-gradient(
+          circle 1224px at 10.6% 8.8%,
+          rgba(255, 255, 255, 1) 0%,
+          rgba(153, 202, 251, 1) 100.2%
+        );
+        height: 100vh;
+        margin: 0;
+        padding: 5%;
+        box-sizing: border-box;
+        background-size: 100%;
+        background-repeat: no-repeat;
+      }
+      input {
+        text-align: center;
+      }
+      button {
+        background-color: white;
+        color: black;
+        border: none;
+        padding: 15px 20px;
+        border-radius: 5px;
+      }
+      button:hover {
+        background-color: #b8dafc;
+        color: white;
+        border: none;
+        font-weight: bold;
+        box-shadow: 1px 1px 5px 2px gray;
+      }
+      button:active {
+        box-shadow: none;
+      }
+      button:focus {
+        outline: none;
+      }
     </style>
   </head>
   <body>
+    <h1>Rohit's Hangman</h1>
     <div id="game"></div>
-    <p id="attempts"></div>
+    <p id="attempts"></p>
+    <p id="result"></p>
+    <button id="reset">Reset</button>
     <script>
       let words = [
         "Problems",
         "Algorithms",
-        "Problems",
+        "Netflix",
+        "Hangman",
+        "Discord",
+        "JavaScript",
+        "Attempts",
         "Algorithms",
-        "Problems",
-        "Algorithms",
-        "Problems",
-        "Algorithms",
-        "Problems",
-        "Algorithms"
+        "Keyboard",
+        "Chemistry",
+        "Mathematics",
+        "Youtube",
+        "Twitter",
+        "Snapchat",
+        "Instagram",
+        "Spotify",
+        "September"
       ];
-      let index = Math.floor(Math.random() * (words.length - 1));
-      let word = words[index];
-      let attempts = word.length/2;
-      document.getElementById("attempts").innerText = `${attempts} Attempts Remaining`;
-      let game = document.getElementById("game");
-      let show = true;
-      word
-        .toUpperCase()
-        .split("")
-        .forEach((c) => {
-          let input = document.createElement("input");
-          input.setAttribute("type", "text");
-          input.setAttribute("class", "letter");
-          input.addEventListener("input", function (e) {
-            e.target.value =
-              ("value", e.target.value.charAt(e.target.value.length - 1));
-              document.getElementById("attempts").innerText = `${--attempts} Attempts Remaining`;
+      function init() {
+        let index = Math.floor(Math.random() * (words.length - 1));
+        let word = words[index];
+        let attempts = Math.floor(word.length / 2);
+        let score = attempts;
+        document.getElementById(
+          "attempts"
+        ).innerText = `${attempts} Attempts Remaining`;
+        let game = document.getElementById("game");
+        let inputContainer = document.createElement("div");
+        let show = true;
+        word
+          .toUpperCase()
+          .split("")
+          .forEach((c) => {
+            let input = document.createElement("input");
+            input.setAttribute("type", "text");
+            input.setAttribute("class", "letter " + c);
+            input.setAttribute("answer", c);
+            input.addEventListener("input", function (e) {
+              e.target.value = e.target.value
+                .charAt(e.target.value.length - 1)
+                .toUpperCase();
+            });
+            if (show) {
+              input.setAttribute("value", c);
+              input.setAttribute("disabled", true);
+            }
+            show = !show;
+            inputContainer.appendChild(input);
           });
-          if (show) {
-            input.setAttribute("value", c);
-            input.setAttribute("disabled", true);
+        game.appendChild(inputContainer);
+        document.addEventListener("keydown", (e) => {
+          if (attempts <= 0) return;
+          let arr = document.getElementsByClassName(e.key.toUpperCase());
+          if (arr.length > 0) {
+            for (let item of arr) {
+              score++;
+              item.value = e.key.toUpperCase();
+              item.setAttribute("disabled", true);
+              item.className = "letter";
+            }
+          } else {
+            document.getElementById(
+              "attempts"
+            ).innerText = `${--attempts} Attempts Remaining`;
           }
-          show = !show;
-          game.appendChild(input);
+          if (attempts <= 0) {
+            let inputs = document.getElementsByClassName("letter");
+            for (let item of inputs) {
+              item.value = item.className.split(" ")[1];
+              item.setAttribute("disabled", true);
+            }
+            document.getElementById("result").innerText = `You Lost`;
+          } else if (score === word.length) {
+            document.getElementById("result").innerText = `You won`;
+          }
         });
+      }
+      init();
+      document.getElementById("reset").addEventListener("click", () => {
+        let inputContainer = document.getElementById("game").firstElementChild;
+        game.removeChild(inputContainer);
+        init();
+      });
     </script>
   </body>
 </html>

@@ -67,9 +67,11 @@ function onPlay(e) {
     let result = document.getElementById("result");
     result.innerText = `You Lost`;
     result.style.color = "red";
+    attempts = 0;
   } else if (score === word.length) {
     let result = document.getElementById("result");
     result.innerText = `You won`;
+    attempts = 0;
     result.style.color = "rgb(65, 182, 65)";
   }
 }
